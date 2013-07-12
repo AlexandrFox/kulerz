@@ -1,0 +1,21 @@
+# incremental data. DO NOT EDIT.
+# format is <lastModified> <length> <SHA-1> <path>
+# Encoding is UTF-8
+1373613095000 449 0a5da08e2a6990d555ee5b3fdb7b5b79460f4736 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$dimen.class
+1373613095000 5655 daf5ad632ca4e7db3ea5555165b1dfdaac5639de /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/algorithms/KMeansAlgorithm.class
+1373613095000 640 45592fb14423e392d398826820ba85d657c9d7a1 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$id.class
+1373613095000 376 55abb594fbb56394120a794ed945ed834160a741 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$menu.class
+1373613095000 460 110734f0657bf50c195639f6903974c2171f0e80 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$string.class
+1373613095000 1036 59d84dfe53f6474317295ff72550cd52327da0de /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/helpers/SystemHelper.class
+1373613095000 413 03670b856dfa7001e4e4399cab6cd96625df0e13 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$color.class
+1372344364000 484258 bd6479f5dd592790607e0504e66e0f31c2b4d308 /home/a.s.mironov/sources/KulerzProject/Kulerz/libs/android-support-v4.jar
+1373613095000 7879 765e0f9336252664c10ffe2326f6f05691bdb159 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/MainActivity.class
+1373613095000 1383 6955da30371cfce3eec178743d0925fb2e982cf7 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/algorithms/KMeansAlgorithm$Cluster.class
+1373613095000 721 d35c9f88080bdb2072417f1945de829c21583cfe /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R.class
+1373613095000 524 984a607e12daea509c43159db1ae9f8a7578ea5a /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$raw.class
+1373613095000 391 6abbd365e3240f20df421e1b77a9464e98609ec5 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$layout.class
+1373613095000 2261 cd22f2bb2574a90d4e4420d3abf51c1ba45913db /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/helpers/BitmapHelper.class
+1373613095000 328 c332a9b582db65c001929e1bec6391a29c8c2af1 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$attr.class
+1373613095000 395 7bc2acab58e786fa1632a41e7bcc15baa27ed333 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$drawable.class
+1373613095000 337 daf9c1deadd964e7e5c8cefce81e910336bb8845 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/BuildConfig.class
+1373613095000 419 cfe5c03f419a8562f38dcb0d35b967fefceadbe6 /home/a.s.mironov/sources/KulerzProject/Kulerz/build/classes/debug/com/kulerz/app/R$style.class
