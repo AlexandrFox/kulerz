@@ -1,6 +1,8 @@
 package com.kulerz.app.algorithms;
 
 import android.graphics.Bitmap;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -20,11 +22,15 @@ public class KMeansAlgorithm
     private int minDifference;
     private Random random = new Random();
 
-    public static class Cluster implements Comparable
+    public static class Cluster implements Comparable, Serializable
     {
 
         public int[] center;
-        public ArrayList<int[]> points = new ArrayList<int[]>();
+        public ArrayList<int[]> points;
+
+        public Cluster() {
+            points = new ArrayList<int[]>();
+        }
 
         public Cluster(int[] center, ArrayList<int[]> points) {
             this.center = center;
@@ -32,8 +38,15 @@ public class KMeansAlgorithm
         }
 
         public int[] getRandomColor(Random random) {
+            if(points.size() == 0) {
+                return null;
+            }
             int idx = random.nextInt(points.size());
             return points.get(idx);
+        }
+
+        public void clearPoints() {
+            points.clear();
         }
 
         @Override

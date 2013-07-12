@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.kulerz.app.algorithms.KMeansAlgorithm;
 import com.kulerz.app.helpers.BitmapHelper;
 import com.kulerz.app.helpers.SystemHelper;
+import com.kulerz.app.views.PinchImageView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,8 +22,11 @@ import java.util.Random;
 public class MainActivity extends Activity implements ViewTreeObserver.OnGlobalLayoutListener {
 
     private static final int WORKING_SIZE = 100;
-    private static final int COLOR_CIRCLE_SIZE = 10;
-    private static final int VISUAL_PADDING = 15;
+    private static final int COLOR_CIRCLE_SIZE = 15;
+    private static final int VISUAL_PADDING = 20;
+    private static final String CLUSTERS_KEY = "clusters";
+    private static final String WORKING_BITMAP_KEY = "workingBitmap";
+    private static final String RANDOM_COLOR_POINTS_KEY = "randomColorPoints";
 
     private int layoutWidth;
     private int layoutHeight;
@@ -31,41 +35,75 @@ public class MainActivity extends Activity implements ViewTreeObserver.OnGlobalL
     private Bitmap outerBitmap;
     private Random random = new Random();
     private ArrayList<KMeansAlgorithm.Cluster> clusters;
+    private ArrayList<int[]> randomColorPoints;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if(savedInstanceState != null) {
+            clusters = (ArrayList<KMeansAlgorithm.Cluster>)savedInstanceState.getSerializable(CLUSTERS_KEY);
+            randomColorPoints = (ArrayList<int[]>)savedInstanceState.getSerializable(RANDOM_COLOR_POINTS_KEY);
+            workingBitmap = savedInstanceState.getParcelable(WORKING_BITMAP_KEY);
+        }
         findViewById(R.id.imageLayout).getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        visualBitmap.recycle();
-        workingBitmap.recycle();
         outerBitmap.recycle();
-        visualBitmap = null;
-        workingBitmap = null;
-        outerBitmap = null;
-        clusters.clear();
         System.gc();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(CLUSTERS_KEY, clusters);
+        outState.putParcelable(WORKING_BITMAP_KEY, workingBitmap);
+        outState.putSerializable(RANDOM_COLOR_POINTS_KEY, randomColorPoints);
     }
 
     @Override
     public void onGlobalLayout() {
         setupLayoutDimensions();
-        setupBitmaps();
-        KMeansAlgorithm kMeans = new KMeansAlgorithm(workingBitmap, 5, 1);
-        clusters = kMeans.getClusters();
-        Collections.sort(clusters);
+        if(workingBitmap == null) {
+            setupWorkingBitmap();
+        }
+        if(clusters == null) {
+            KMeansAlgorithm kMeans = new KMeansAlgorithm(workingBitmap, 5, 1);
+            clusters = kMeans.getClusters();
+            Collections.sort(clusters);
+            randomColorPoints = new ArrayList<int[]>(clusters.size());
+            for(KMeansAlgorithm.Cluster cluster : clusters) {
+                randomColorPoints.add(cluster.getRandomColor(random));
+                cluster.clearPoints();
+            }
+        }
+        setupVisualBitmap();
         renderClusterizationResults();
+        visualBitmap.recycle();
     }
 
-    private void setupBitmaps() {
+    private void setupLayoutDimensions() {
+        View imageLayout = findViewById(R.id.imageLayout);
+        layoutWidth = imageLayout.getWidth();
+        layoutHeight = imageLayout.getHeight();
+    }
+
+    private void setupWorkingBitmap() {
         try {
             InputStream inputStream = getResources().openRawResource(R.raw.image2);
             workingBitmap = createWorkingBitmap(inputStream);
+            inputStream.close();
+        } catch (IOException e) {
+            Log.e(MainActivity.class.toString(), "Fail: " + e.getMessage());
+        }
+    }
+
+    private void setupVisualBitmap() {
+        try {
+            InputStream inputStream = getResources().openRawResource(R.raw.image2);
             visualBitmap = createVisualBitmap(inputStream);
             inputStream.close();
         } catch (IOException e) {
@@ -73,9 +111,9 @@ public class MainActivity extends Activity implements ViewTreeObserver.OnGlobalL
         }
     }
 
-    //@TODO correct the position color marker (not to overflow window and each other) or use image margins and nice shadow
     private void renderClusterizationResults() {
         int dpPadding = SystemHelper.convertDpToPixel(VISUAL_PADDING, this);
+        int dpShadowRadius = SystemHelper.convertDpToPixel(10.0f, this);
         int outerWidth = visualBitmap.getWidth();
         int outerHeight = visualBitmap.getHeight();
 
@@ -83,33 +121,34 @@ public class MainActivity extends Activity implements ViewTreeObserver.OnGlobalL
         Rect rect = new Rect(dpPadding, dpPadding, outerWidth - dpPadding, outerHeight - dpPadding);
         outerBitmap = Bitmap.createBitmap(outerWidth, outerHeight, Bitmap.Config.ARGB_8888);
         Canvas outerCanvas = new Canvas(outerBitmap);
-        paint.setShadowLayer(3.5f, 0, 1.0f, Color.argb(180, 0, 0, 0));
+        paint.setShadowLayer(dpShadowRadius, 0, 0, Color.argb(200, 0, 0, 0));
         outerCanvas.drawRect(rect, paint);
         paint.clearShadowLayer();
         outerCanvas.drawBitmap(visualBitmap, null, rect, null);
         float scaleRatio = BitmapHelper.getScaleRatio(workingBitmap.getWidth(), workingBitmap.getHeight(), rect.width(), rect.height());
-        int i = 0;
-        for(KMeansAlgorithm.Cluster c : clusters) {
+        for(int i = 0, j = 1; i < clusters.size(); i++, j++) {
+            KMeansAlgorithm.Cluster c = clusters.get(i);
             int rgbColor = Color.rgb(c.center[0], c.center[1], c.center[2]);
-            int[] randomClusterColor = c.getRandomColor(random);
+            int[] randomClusterColor = randomColorPoints.get(i);
             int x = (int)(randomClusterColor[3] * scaleRatio) + dpPadding;
             int y = (int)(randomClusterColor[4] * scaleRatio) + dpPadding;
             drawColorCircle(outerCanvas, x, y, rgbColor, paint);
-            int viewId = getResources().getIdentifier("color_" + String.valueOf(++i), "id", getPackageName());
+            int viewId = getResources().getIdentifier("color_" + String.valueOf(j), "id", getPackageName());
             findViewById(viewId).setBackgroundColor(rgbColor);
         }
-        ImageView myImage = (ImageView) findViewById(R.id.imageView);
+        PinchImageView myImage = (PinchImageView) findViewById(R.id.imageView);
         myImage.setImageBitmap(outerBitmap);
     }
 
     private void drawColorCircle(Canvas canvas, int x, int y, int color, Paint paint) {
+        int dpShadowRadius = SystemHelper.convertDpToPixel(2.5f, this);
+        int dpShadowDy = SystemHelper.convertDpToPixel(4.0f, this);
         int dpPixels = SystemHelper.convertDpToPixel(COLOR_CIRCLE_SIZE, this);
         int strokePixel = SystemHelper.convertDpToPixel(2, this);
 
-        paint.setShadowLayer(2.5f, 0.0f, 4.0f, Color.argb(110, 0, 0, 0));
+        paint.setShadowLayer(dpShadowRadius, 0, dpShadowDy, Color.argb(130, 0, 0, 0));
         canvas.drawCircle(x, y, dpPixels + strokePixel, paint);
         paint.clearShadowLayer();
-
         paint.setColor(Color.WHITE);
         canvas.drawCircle(x, y, dpPixels + strokePixel, paint);
         paint.setColor(color);
@@ -124,40 +163,12 @@ public class MainActivity extends Activity implements ViewTreeObserver.OnGlobalL
     }
 
     private Bitmap createVisualBitmap(InputStream imageStream) {
-        logMemory("createVisualBitmap");
         int dpWidth = SystemHelper.convertDpToPixel(layoutWidth, this);
         int dpHeight = SystemHelper.convertDpToPixel(layoutHeight, this);
         Bitmap bitmap = BitmapHelper.resample(imageStream, dpWidth, dpHeight, true);
         Bitmap scaledBitmap = BitmapHelper.getScaledBitmap(bitmap, dpWidth, dpHeight);
         bitmap.recycle();
         return scaledBitmap;
-    }
-
-    private void setupLayoutDimensions() {
-        View imageLayout = findViewById(R.id.imageLayout);
-        layoutWidth = imageLayout.getWidth();
-        layoutHeight = imageLayout.getHeight();
-    }
-
-    long availableJavaMemoryOld, availableNativeMemoryOld;
-
-    private void logMemory(String callingFunction)
-    {
-        long max = Runtime.getRuntime().maxMemory() / 1024;
-        long used = Runtime.getRuntime().totalMemory() / 1024;
-        long available = max - used;
-        long change = available - availableJavaMemoryOld;
-        if (availableJavaMemoryOld != 0)
-            Log.i("TEST_MEM", "jMEM M:" + max + ", U:" + used + ", A:" + available + ", C:" + change + ", " + callingFunction);
-        availableJavaMemoryOld = available;
-
-
-        used = Debug.getNativeHeapAllocatedSize() / 1024;
-        available = max - used;
-        change = available - availableNativeMemoryOld;
-        if (availableNativeMemoryOld != 0)
-            Log.i("TEST_MEM", "nMEM M:" + max + ", U:" + used + ", A:" + available + ", C:" + change + ", " + callingFunction);
-        availableNativeMemoryOld = available;
     }
 
 }
