@@ -5,4 +5,5 @@
     <string name="cannot_create_image">Cannot create temporary image file</string>
     <string name="cannot_create_directory">Cannot create directory for image files</string>
     <string name="file_not_found">File not found</string>
+    <string name="crunching">Crunching image just for you...</string>
 </resources>

@@ -135,6 +135,9 @@ public class StartActivity extends KulerzActivity {
             case TAKE_A_PHOTO:
                 if(resultCode == RESULT_OK) {
                     Uri photoUri = Uri.fromFile(image);
+                    Intent mediaScan = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+                    mediaScan.setData(photoUri);
+                    sendBroadcast(mediaScan);
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra(MainActivity.IMAGE_URI, photoUri);
                     startActivity(intent);
