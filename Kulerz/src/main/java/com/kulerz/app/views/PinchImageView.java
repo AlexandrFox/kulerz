@@ -11,6 +11,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * Pinch Image View class
+ * @author unknown hero
+ * @author a.s.mironov
+ */
 public class PinchImageView extends ImageView implements View.OnTouchListener {
 
     private static float MAX_SCALE = 2.0f;
@@ -18,19 +23,14 @@ public class PinchImageView extends ImageView implements View.OnTouchListener {
 
     private Matrix mMatrix;
     private final float[] mMatrixValues = new float[9];
-
     private int mWidth;
     private int mHeight;
-
     private int mIntrinsicWidth;
     private int mIntrinsicHeight;
-
     private float mScale;
     private float mMinScale;
-
     private float mPrevDistance;
     private boolean isScaling;
-
     private int mPrevMoveX;
     private int mPrevMoveY;
     private GestureDetector mDetector;
@@ -48,13 +48,13 @@ public class PinchImageView extends ImageView implements View.OnTouchListener {
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
-        this.initialize();
+        initialize();
     }
 
     @Override
     public void setImageResource(int resId) {
         super.setImageResource(resId);
-        this.initialize();
+        initialize();
     }
 
     private void initialize() {
@@ -203,8 +203,7 @@ public class PinchImageView extends ImageView implements View.OnTouchListener {
             case MotionEvent.ACTION_POINTER_1_DOWN:
             case MotionEvent.ACTION_POINTER_2_DOWN:
                 if (touchCount >= 2) {
-                    float distance = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
-                    mPrevDistance = distance;
+                    mPrevDistance = distance(event.getX(0), event.getX(1), event.getY(0), event.getY(1));
                     isScaling = true;
                 } else {
                     mPrevMoveX = (int) event.getX();

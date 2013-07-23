@@ -1,7 +1,6 @@
 package com.kulerz.app.algorithms;
 
 import android.graphics.Bitmap;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
@@ -147,9 +146,13 @@ public class KMeansAlgorithm
     private double recalculateClustersCenters(ArrayList<Cluster> clusters, ArrayList<ArrayList<int[]>> lists) {
         double diff = 0;
         for (int i = 0; i < clustersCount; i++) {
+            ArrayList<int[]> list = lists.get(i);
+            if(list.isEmpty()) { //in case of very similar or identical colors list may be empty
+                continue;
+            }
             Cluster oldCluster = clusters.get(i);
-            int[] center = calculateClusterCenter(lists.get(i), 3);
-            Cluster newCluster = new Cluster(center, lists.get(i));
+            int[] center = calculateClusterCenter(list, 3);
+            Cluster newCluster = new Cluster(center, list);
             double dist = euclidean(oldCluster.center, center);
             clusters.set(i, newCluster);
             diff = diff > dist ? diff : dist;

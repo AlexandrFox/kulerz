@@ -1,6 +1,13 @@
 package com.kulerz.app.helpers;
+
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.util.Log;
+import com.kulerz.app.Kulerz;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class BitmapHelper
@@ -21,14 +28,28 @@ public class BitmapHelper
         return Bitmap.createScaledBitmap(src, newWidth, newHeight, true);
     }
 
-    public static Bitmap resample(InputStream stream, int width, int height, boolean immutable) {
+    public static Bitmap resample(Context context, Uri uri, int width, int height, boolean immutable) throws IOException {
+        InputStream stream = getImageInputStream(uri, context);
+        if(stream == null) {
+            return null;
+        }
         final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(stream, null, options);
         options.inSampleSize = calculateInSampleSize(options, width, height);
         options.inJustDecodeBounds = false;
         options.inMutable = immutable;
-        return BitmapFactory.decodeStream(stream, null, options);
+        stream.close();
+        return BitmapFactory.decodeStream(getImageInputStream(uri, context), null, options);
+    }
+
+    private static InputStream getImageInputStream(Uri uri, Context context) {
+        try {
+            return context.getContentResolver().openInputStream(uri);
+        } catch (FileNotFoundException e) {
+            Log.e(Kulerz.TAG, e.getMessage());
+            return null;
+        }
     }
 
     private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {

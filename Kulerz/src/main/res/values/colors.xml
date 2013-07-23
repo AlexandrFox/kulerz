@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFF</color>
-    <color name="dark_gray">#ff393939</color>
+    <color name="background">#ff4a4a4a</color>
+    <color name="bar_background">#ff2a2a2a</color>
+    <color name="wave">#0099CC</color>
 </resources>
