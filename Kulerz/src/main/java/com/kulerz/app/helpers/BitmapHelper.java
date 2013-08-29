@@ -19,6 +19,18 @@ public class BitmapHelper
         return Math.min(scaleX, scaleY);
     }
 
+    public static Bitmap createBitmap(Context context, Uri uri, int width, int height, boolean immutable) {
+        try {
+            Bitmap bitmap = BitmapHelper.resample(context, uri, width, height, immutable);
+            Bitmap result = BitmapHelper.getScaledBitmap(bitmap, width, height);
+            bitmap.recycle();
+            return result;
+        } catch (IOException e) {
+            Log.e(Kulerz.TAG, e.toString());
+            return null;
+        }
+    }
+
     public static Bitmap getScaledBitmap(Bitmap src, int width, int height) {
         int srcWidth = src.getWidth();
         int srcHeight = src.getHeight();

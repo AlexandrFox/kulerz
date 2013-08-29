@@ -30,6 +30,7 @@ public class StartActivity extends KulerzActivity {
 
     private static final int SELECT_PHOTO_GALLERY = 100;
     private static final int TAKE_A_PHOTO = 101;
+    private static final String FILE_KEY = "image";
     private static final String FILE_PREFIX = "kulerz_";
     private static final String FILE_SUFFIX = ".jpg";
     private static final String ALBUM_NAME = "kulerz";
@@ -42,6 +43,15 @@ public class StartActivity extends KulerzActivity {
         takeAPhotoBtn = (Button)findViewById(R.id.takeAPhotoBtn);
         myPalettesListBtn = (Button)findViewById(R.id.myPalettesListBtn);
         initializeHandlers();
+        if(savedInstanceState != null) {
+            image = (File)savedInstanceState.getSerializable(FILE_KEY);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(FILE_KEY, image);
     }
 
     private void initializeHandlers() {
