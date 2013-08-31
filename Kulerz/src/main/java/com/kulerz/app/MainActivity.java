@@ -1,28 +1,23 @@
 package com.kulerz.app;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
-import android.graphics.*;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.widget.LinearLayout;
-
-import com.kulerz.app.algorithms.KMeansAlgorithm;
+import com.kulerz.app.adapters.KulerzFragmentPagerAdapter;
 import com.kulerz.app.fragments.ColorsFragment;
 import com.kulerz.app.fragments.ImageFragment;
 import com.kulerz.app.helpers.BitmapHelper;
-import com.kulerz.app.helpers.SystemHelper;
 import com.kulerz.app.tasks.ClusterizationTask;
-import com.kulerz.app.views.PinchImageView;
-import java.io.IOException;
+import com.kulerz.app.views.KulerzViewPager;
+
 
 public class MainActivity extends KulerzActivity
         implements ViewTreeObserver.OnGlobalLayoutListener, ClusterizationTask.ClusterizationTaskListener {
@@ -42,19 +37,29 @@ public class MainActivity extends KulerzActivity
     private View layout;
     private ProgressDialog dialog;
     private ClusterizationTask clusterizationTask;
-    private ColorsFragment colorsFragment;
-    private ImageFragment imageFragment;
+    private KulerzFragmentPagerAdapter adapter;
+    private KulerzViewPager pager;
 
     @Override
     @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setupActionBar();
         layout = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
-        colorsFragment = (ColorsFragment)getFragmentManager().findFragmentById(R.id.colorsFragment);
-        imageFragment = (ImageFragment)getFragmentManager().findFragmentById(R.id.imageFragment);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(this);
         initialize(savedInstanceState);
+    }
+
+    private void setupActionBar() {
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+        pager = (KulerzViewPager)findViewById(R.id.pager);
+        adapter = new KulerzFragmentPagerAdapter(this, pager);
+        adapter.addTab(actionBar.newTab().setText("Tab"), ImageFragment.class, null);
+        adapter.addTab(actionBar.newTab().setText("Tab 2"), ImageFragment.class, null);
+        pager.setCurrentItem(0);
+        pager.setSwipeEnabled(false);
     }
 
     private void initialize(Bundle savedInstanceState) {
@@ -68,7 +73,7 @@ public class MainActivity extends KulerzActivity
         if(workingBitmap == null) {
             workingBitmap = BitmapHelper.createBitmap(this, imageUri, WORKING_SIZE, WORKING_SIZE, false);
         }
-        clusterizationTask = (ClusterizationTask)getLastNonConfigurationInstance();
+        clusterizationTask = (ClusterizationTask)getLastCustomNonConfigurationInstance();
         if(clusterizationTask == null) {
             clusterizationTask = new ClusterizationTask();
         }
@@ -76,7 +81,7 @@ public class MainActivity extends KulerzActivity
     }
 
     @Override
-    public Object onRetainNonConfigurationInstance() {
+    public Object onRetainCustomNonConfigurationInstance() {
         return clusterizationTask;
     }
 
@@ -110,6 +115,8 @@ public class MainActivity extends KulerzActivity
     @Override
     public void onAfterClusterizationComplete(ClusterizationTask.ClusterizationResult result) {
         clusterizationResult = result;
+        ImageFragment imageFragment = (ImageFragment) adapter.findFragmentByPosition(0);
+        ColorsFragment colorsFragment = (ColorsFragment) getSupportFragmentManager().findFragmentById(R.id.colorsFragment);
         imageFragment.setLayoutParams(layout.getWidth(), layout.getHeight());
         imageFragment.setWorkingBitmapParams(workingBitmap.getWidth(), workingBitmap.getHeight());
         imageFragment.setImageUri(imageUri);

@@ -1,6 +1,6 @@
 package com.kulerz.app;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 
 public abstract class KulerzFragment extends Fragment
 {

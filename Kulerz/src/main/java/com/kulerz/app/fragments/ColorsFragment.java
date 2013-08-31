@@ -47,26 +47,4 @@ public class ColorsFragment extends KulerzFragment
         layout.setVisibility(View.VISIBLE);
     }
 
-//    private void fadeOutColorsLayout() {
-//        if(colorsLayout.getAlpha() < 1.0f) {
-//            return;
-//        }
-//        AlphaAnimation animation = new AlphaAnimation(1.0f, 0.5f);
-//        animation.setInterpolator(new AccelerateInterpolator());
-//        animation.setDuration(200);
-//        animation.setFillAfter(true);
-//        colorsLayout.startAnimation(animation);
-//    }
-//
-//    private void fadeInColorsLayout() {
-//        if(colorsLayout.getAlpha() == 1.0f) {
-//            return;
-//        }
-//        AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
-//        animation.setInterpolator(new AccelerateInterpolator());
-//        animation.setDuration(200);
-//        animation.setFillAfter(true);
-//        colorsLayout.startAnimation(animation);
-//    }
-
 }

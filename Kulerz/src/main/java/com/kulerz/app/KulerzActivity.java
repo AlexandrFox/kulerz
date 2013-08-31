@@ -1,9 +1,9 @@
 package com.kulerz.app;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 
-public abstract class KulerzActivity extends Activity
+public abstract class KulerzActivity extends FragmentActivity
 {
 
     protected Kulerz kulerz;
