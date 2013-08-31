@@ -2,45 +2,17 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
     android:baselineAligned="false"
     android:visibility="invisible"
+    android:background="@color/bar_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:id="@+id/color_1"
+        android:id="@+id/colorsLayout"
+        android:padding="3dp"
+        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id = "@+id/color_2"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id = "@+id/color_3"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id = "@+id/color_4"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:id = "@+id/color_5"
-        android:layout_height="fill_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1" />
+        android:orientation="horizontal" />
 
 </LinearLayout>
