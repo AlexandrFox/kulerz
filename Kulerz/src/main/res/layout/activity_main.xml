@@ -2,21 +2,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.kulerz.app.views.KulerzViewPager
-        android:id="@+id/pager"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/colorsFragment"/>
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/slidingLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
-    <fragment android:name="com.kulerz.app.fragments.ColorsFragment"
-        android:id="@id/colorsFragment"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"
-        android:layout_width="fill_parent"
-        android:layout_height="60dp"
-        tools:layout="@layout/fragment_colors" />
+        <com.kulerz.app.views.KulerzViewPager
+            android:id="@+id/pager"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+        />
+
+        <fragment android:name="com.kulerz.app.fragments.ColorsFragment"
+            android:id="@+id/colorsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_colors" />
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 </RelativeLayout>

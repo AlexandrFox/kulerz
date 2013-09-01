@@ -1,1 +1,2 @@
 include ':Kulerz'
+include ':Kulerz:deps:AndroidSlidingUpPanel:library'

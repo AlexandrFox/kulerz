@@ -4,15 +4,30 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:baselineAligned="false"
     android:visibility="invisible"
+    android:orientation="vertical"
     android:background="@color/bar_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/colorsLayout"
-        android:padding="3dp"
+    <FrameLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="horizontal" />
+        android:layout_height="60dp">
+
+        <LinearLayout
+            android:id="@+id/colorsLayout"
+            android:padding="3dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="horizontal" />
+
+        <com.kulerz.app.views.ColorView
+            android:id="@+id/singleColorView"
+            android:layout_margin="3dp"
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:visibility="gone"
+            android:layout_height="fill_parent" />
+
+    </FrameLayout>
 
 </LinearLayout>

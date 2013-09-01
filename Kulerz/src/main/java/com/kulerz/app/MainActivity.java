@@ -6,8 +6,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -15,9 +13,11 @@ import com.kulerz.app.adapters.KulerzFragmentPagerAdapter;
 import com.kulerz.app.fragments.ColorsFragment;
 import com.kulerz.app.fragments.ImageFragment;
 import com.kulerz.app.helpers.BitmapHelper;
+import com.kulerz.app.helpers.SystemHelper;
 import com.kulerz.app.tasks.ClusterizationTask;
+import com.kulerz.app.views.ColorView;
 import com.kulerz.app.views.KulerzViewPager;
-
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 public class MainActivity extends KulerzActivity
         implements ViewTreeObserver.OnGlobalLayoutListener, ClusterizationTask.ClusterizationTaskListener {
@@ -38,7 +38,7 @@ public class MainActivity extends KulerzActivity
     private ProgressDialog dialog;
     private ClusterizationTask clusterizationTask;
     private KulerzFragmentPagerAdapter adapter;
-    private KulerzViewPager pager;
+    private SlidingUpPanelLayout panelLayout;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -47,6 +47,7 @@ public class MainActivity extends KulerzActivity
         setContentView(R.layout.activity_main);
         setupActionBar();
         layout = ((ViewGroup)findViewById(android.R.id.content)).getChildAt(0);
+        panelLayout = (SlidingUpPanelLayout)findViewById(R.id.slidingLayout);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(this);
         initialize(savedInstanceState);
     }
@@ -54,7 +55,7 @@ public class MainActivity extends KulerzActivity
     private void setupActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        pager = (KulerzViewPager)findViewById(R.id.pager);
+        KulerzViewPager pager = (KulerzViewPager) findViewById(R.id.pager);
         adapter = new KulerzFragmentPagerAdapter(this, pager);
         adapter.addTab(actionBar.newTab().setText("Tab"), ImageFragment.class, null);
         adapter.addTab(actionBar.newTab().setText("Tab 2"), ImageFragment.class, null);
@@ -117,6 +118,7 @@ public class MainActivity extends KulerzActivity
         clusterizationResult = result;
         ImageFragment imageFragment = (ImageFragment) adapter.findFragmentByPosition(0);
         ColorsFragment colorsFragment = (ColorsFragment) getSupportFragmentManager().findFragmentById(R.id.colorsFragment);
+        colorsFragment.setPanelLayout(panelLayout);
         imageFragment.setLayoutParams(layout.getWidth(), layout.getHeight());
         imageFragment.setWorkingBitmapParams(workingBitmap.getWidth(), workingBitmap.getHeight());
         imageFragment.setImageUri(imageUri);
